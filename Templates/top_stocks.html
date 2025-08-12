@@ -1,0 +1,23 @@
+<div class="container">
+    <h2>Top 10 Stocks</h2>
+    <div class="row">
+        {% for stock in stocks %}
+            <div class="col-md-3">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ stock.name }}</h5>
+                        <p class="card-text">Symbol: {{ stock.symbol }}</p>
+                        <p class="card-text">Price: {{ stock.price }}</p>
+                        <p class="card-text">Change: {{ stock.change }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+
+

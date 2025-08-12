@@ -1,3 +1,12 @@
 #ignore venv folder
 
 venv
+.vs/slnx.sqlite
+.vs/stock-trend-predictor/FileContentIndex/2945eb18-7373-45c0-9e72-8df0894db828.vsidx
+.vs/stock-trend-predictor/v17/TestStore/0/000.testlog
+.vs/stock-trend-predictor/v17/TestStore/0/testlog.manifest
+.vs/VSWorkspaceState.json
+.vs/stock-trend-predictor/FileContentIndex/61fdbe1b-47dd-4f4d-b101-0d8afe5e9a26.vsidx
+.vs/stock-trend-predictor/FileContentIndex/441fc11a-1244-4b64-ac67-9a686fbb73ad.vsidx
+.vs/stock-trend-predictor/v17/.wsuo
+__pycache__/lstm_predictor.cpython-313.pyc
