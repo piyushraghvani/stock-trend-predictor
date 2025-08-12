@@ -13,15 +13,11 @@ def home():
 
 @app.route('/history', methods=['GET', 'POST'])
 def history():
-    if request.method == 'POST':
-        symbol = request.form['symbol']
-        return redirect(url_for('history', symbol=symbol))
-
-    symbol = request.args.get('symbol')
-    history_data = None
-    if symbol:
-        history_data = get_history_data(symbol)
-    return render_template('history.html', history_data=history_data, stock_symbol=symbol)
+    symbol = request.args.get("symbol", "AAPL")
+    page = int(request.args.get("page", 1))
+    page_size = 20
+    history_data = get_history_data(symbol, page, page_size)
+    return render_template("history.html", symbol=symbol, history_data=history_data)
 
 @app.route("/tips")
 def tips():

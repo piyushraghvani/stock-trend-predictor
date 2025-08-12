@@ -28,7 +28,7 @@
             {% for stock in top_stocks_nyse %}
             <div class="row py-2 border-bottom align-items-center text-center">
                 <div class="col-3">
-                    <a href="/stock/{{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+                    <a href="/history?symbol={{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
                 </div>
                 <div class="col-3 text-truncate">{{ stock.name }}</div>
                 <div class="col-3">${{ "%.2f"|format(stock.price) }}</div>
@@ -44,7 +44,7 @@
             {% for stock in top_stocks_bse %}
             <div class="row py-2 border-bottom align-items-center text-center">
                 <div class="col-3">
-                    <a href="/stock/{{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+                    <a href="/history?symbol={{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
                 </div>
                 <div class="col-3 text-truncate">{{ stock.name }}</div>
                 <div class="col-3">₹{{ "%.2f"|format(stock.price) }}</div>
@@ -60,7 +60,7 @@
             {% for stock in top_stocks_nse %}
             <div class="row py-2 border-bottom align-items-center text-center">
                 <div class="col-3">
-                    <a href="/stock/{{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+                    <a href="/history?symbol={{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
                 </div>
                 <div class="col-3 text-truncate">{{ stock.name }}</div>
                 <div class="col-3">₹{{ "%.2f"|format(stock.price) }}</div>
