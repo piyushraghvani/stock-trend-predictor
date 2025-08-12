@@ -1,23 +1,76 @@
-<div class="container">
-    <h2>Top 10 Stocks</h2>
-    <div class="row">
-        {% for stock in stocks %}
-            <div class="col-md-3">
-                <div class="card mb-4">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ stock.name }}</h5>
-                        <p class="card-text">Symbol: {{ stock.symbol }}</p>
-                        <p class="card-text">Price: {{ stock.price }}</p>
-                        <p class="card-text">Change: {{ stock.change }}</p>
-                    </div>
+{% extends "base.html" %}
+
+{% block title %}Investment Tips{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Top 10 Performing Stocks</h2>
+    <p class="text-muted text-center">Select a stock exchange to view the top performing stocks:</p>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs justify-content-left" id="stockExchangeTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="nyse-tab" data-bs-toggle="tab" data-bs-target="#nyse" type="button" role="tab" aria-controls="nyse" aria-selected="true">NYSE</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="bse-tab" data-bs-toggle="tab" data-bs-target="#bse" type="button" role="tab" aria-controls="bse" aria-selected="false">BSE</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="nse-tab" data-bs-toggle="tab" data-bs-target="#nse" type="button" role="tab" aria-controls="nse" aria-selected="false">NSE</button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-4" id="stockExchangeTabsContent">
+        
+        <!-- NYSE -->
+        <div class="tab-pane fade show active" id="nyse" role="tabpanel" aria-labelledby="nyse-tab">
+            {% for stock in top_stocks_nyse %}
+            <div class="row py-2 border-bottom align-items-center text-center">
+                <div class="col-3">
+                    <a href="/stock/{{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+                </div>
+                <div class="col-3 text-truncate">{{ stock.name }}</div>
+                <div class="col-3">${{ "%.2f"|format(stock.price) }}</div>
+                <div class="col-3 {% if stock.change >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    {{ "%.2f"|format(stock.change) }}%
                 </div>
             </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+
+        <!-- BSE -->
+        <div class="tab-pane fade" id="bse" role="tabpanel" aria-labelledby="bse-tab">
+            {% for stock in top_stocks_bse %}
+            <div class="row py-2 border-bottom align-items-center text-center">
+                <div class="col-3">
+                    <a href="/stock/{{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+                </div>
+                <div class="col-3 text-truncate">{{ stock.name }}</div>
+                <div class="col-3">₹{{ "%.2f"|format(stock.price) }}</div>
+                <div class="col-3 {% if stock.change >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    {{ "%.2f"|format(stock.change) }}%
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- NSE -->
+        <div class="tab-pane fade" id="nse" role="tabpanel" aria-labelledby="nse-tab">
+            {% for stock in top_stocks_nse %}
+            <div class="row py-2 border-bottom align-items-center text-center">
+                <div class="col-3">
+                    <a href="/stock/{{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+                </div>
+                <div class="col-3 text-truncate">{{ stock.name }}</div>
+                <div class="col-3">₹{{ "%.2f"|format(stock.price) }}</div>
+                <div class="col-3 {% if stock.change >= 0 %}text-success{% else %}text-danger{% endif %}">
+                    {{ "%.2f"|format(stock.change) }}%
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
     </div>
 </div>
-
-
-
-
-
-
+{% endblock %}

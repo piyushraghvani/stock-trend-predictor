@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Stock Prediction App{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">📊 Stock Predictor</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="/">Prediction</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.path == '/history' %} active{% endif %}"
+                            href="/history">History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.path == '/tips' %} active{% endif %}" href="/tips">Investment
+                            Tips</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if request.path == '/top_stocks' %} active{% endif %}" href="/top_stocks">Top Stocks</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="container mt-4">
+        <div class="row">
+            <div class="col text-center">
+                <h1 class="display-5 fw-bold">Stock Trend Predictor</h1>
+                <p class="lead text-muted">Analyze, predict, and make informed investment decisions.</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-card">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <footer class="fixed-bottom">
+        &copy; {{ year }} Stock Predictor. All rights reserved.
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Historical Data{% endblock %}
+
+{% block content %}
+<h1>Historical Stock Data</h1>
+<h2 class="mb-4 text-center">Stock History</h2>
+
+<form method="POST" class="mb-4">
+    <div class="row g-3 align-items-center">
+        <div class="col-auto">
+            <input type="text" name="symbol" class="form-control" placeholder="Enter stock symbol" required>
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">View History</button>
+        </div>
+    </div>
+</form>
+
+{% if history_data is not none and history_data|length > 0 %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Open</th>
+            <th>High</th>
+            <th>Low</th>
+            <th>Close</th>
+            <th>Volume</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for row in history_data %}
+        <tr>
+            <td>{{ row.date }}</td>
+            <td>{{ row.open }}</td>
+            <td>{{ row.high }}</td>
+            <td>{{ row.low }}</td>
+            <td>{{ row.close }}</td>
+            <td>{{ row.volume }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endif %}
+{% endblock %}

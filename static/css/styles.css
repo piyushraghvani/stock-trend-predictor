@@ -1,0 +1,26 @@
+ body {
+     background: linear-gradient(135deg, #f8fafc 0%, #e9ecef 100%);
+     min-height: 100vh;
+ }
+
+ .main-card {
+     background: #fff;
+     border-radius: 12px;
+     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+     padding: 2rem;
+     margin-top: 2rem;
+ }
+
+ .navbar-brand {
+     font-weight: 600;
+     font-size: 1.3rem;
+ }
+
+ footer {
+     background: #212529;
+     color: #fff;
+     text-align: center;
+     padding: 1rem 0;
+     margin-top: 3rem;
+     border-top: 1px solid #343a40;
+ }
