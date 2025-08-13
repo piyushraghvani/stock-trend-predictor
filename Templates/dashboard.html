@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Dashboards{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4 text-center">Value Buys</h2>
+    <div class="row py-2 border-bottom align-items-center text-center fw-bold">
+        <div class="col-3">Symbol</div>
+        <div class="col-3">Name</div>
+        <div class="col-3">Price</div>
+        <div class="col-3">P/E Ratio</div>
+    </div>
+    {% for stock in value_buys %}
+    <div class="row py-2 border-bottom align-items-center text-center">
+        <div class="col-3">
+            <a href="/history?symbol={{ stock.symbol }}" class="text-decoration-none fw-semibold">{{ stock.symbol }}</a>
+        </div>
+        <div class="col-3 text-truncate">{{ stock.name }}</div>
+        <div class="col-3">${{ "%.2f"|format(stock.price) }}</div>
+        <div class="col-3 text-success fw-bold">{{ "%.2f"|format(stock.pe_ratio) }}</div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

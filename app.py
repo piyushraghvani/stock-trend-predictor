@@ -2,9 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for
 from top_stocks import get_top_stocks_nyse
 from top_stocks import get_top_indian_stocks_nse
 from top_stocks import get_top_indian_stocks_bse
-from useful_tips import get_useful_tips
 from history_data import get_history_data
 # from lstm_predictor import predict_stock  # Assuming you have a predict function in predict.py
+from useful_tips import get_top_growth_picks, get_value_buys, get_hidden_gems
 
 app = Flask(__name__)
 
@@ -65,6 +65,14 @@ def top_stocks():
     top_stocks_nse = get_top_indian_stocks_nse()
     top_stocks_bse = get_top_indian_stocks_bse()
     return render_template("top_stocks.html", top_stocks_nyse=top_stocks_nyse, top_stocks_nse=top_stocks_nse, top_stocks_bse=top_stocks_bse)
+
+
+@app.route("/dashboard")
+def dashboard():
+    top_growth = get_top_growth_picks()
+    value_buys = get_value_buys()
+    hidden_gems = get_hidden_gems()
+    return render_template("dashboard.html", top_growth=top_growth, value_buys=value_buys, hidden_gems=hidden_gems)
 
 if __name__ == "__main__":
     app.run(debug=True)
