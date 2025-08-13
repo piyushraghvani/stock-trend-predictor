@@ -29,23 +29,13 @@
                         <a class="nav-link{% if request.path == '/tips' %} active{% endif %}" href="/tips">Investment
                             Tips</a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link{% if request.path == '/top_stocks' %} active{% endif %}" href="/top_stocks">Top Stocks</a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
     </nav>
-
-    <header class="container mt-4">
-        <div class="row">
-            <div class="col text-center">
-                <h1 class="display-5 fw-bold">Stock Trend Predictor</h1>
-                <p class="lead text-muted">Analyze, predict, and make informed investment decisions.</p>
-            </div>
-        </div>
-    </header>
-
     <div class="container">
         <div class="main-card">
             {% block content %}{% endblock %}

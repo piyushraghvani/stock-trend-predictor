@@ -1,0 +1,11 @@
+# The requirements.txt file is used to specify the dependencies for our Python project.
+# By listing all required packages and their versions, we can easily install them using pip.
+# This ensures that our application has all the necessary libraries to run correctly.
+
+flask
+yfinance
+prophet
+matplotlib
+pandas
+numpy
+scikit-learn

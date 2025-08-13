@@ -1,17 +1,55 @@
 {% extends "base.html" %}
-{% block title %}Stock Prediction{% endblock %}
+{% block title %}AI Stock Predictor{% endblock %}
 {% block content %}
-<h1 class="mb-4">📈 AI Stock Predictor</h1>
-<form method="POST">
-    <div class="mb-3">
-        <label for="ticker" class="form-label">Enter Stock Ticker (e.g., AAPL)</label>
-        <input type="text" class="form-control" id="ticker" name="ticker" required>
+
+<!-- Hero Section -->
+<section class="py-5 bg-light text-center">
+    <div class="container">
+        <h1 class="display-4">📈 AI Stock Predictor</h1>
+        <p class="lead">
+            Get AI-powered predictions and insights for your favorite stocks — powered by real market data.
+        </p>
+        <a href="/predict_stock" class="btn btn-primary btn-lg mt-3">Start Predicting</a>
     </div>
-    <button type="submit" class="btn btn-primary">Predict</button>
-</form>
-{% if prediction %}
-<hr>
-<h3>Prediction for {{ ticker }}: {{ prediction }}</h3>
-<img src="{{ chart }}" class="img-fluid mt-3" alt="Prediction Chart">
-{% endif %}
+</section>
+
+<!-- How It Works -->
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center mb-4">How It Works</h2>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4">
+                    <h4>1️⃣ Enter Stock Symbol</h4>
+                    <p>Type in the ticker symbol (e.g., AAPL) to get started.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4">
+                    <h4>2️⃣ AI Analysis</h4>
+                    <p>We fetch historical data and apply AI models to forecast trends.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm p-4">
+                    <h4>3️⃣ View Predictions</h4>
+                    <p>Get a detailed chart and expected movement for the stock.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Top Performing Stocks -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center mb-4">🔥 Top Performing Stocks</h2>
+        <div class="card shadow-sm">
+            <div class="card-body">
+                {% include "top_stocks.html" %}
+            </div>
+        </div>
+    </div>
+</section>
+
 {% endblock %}

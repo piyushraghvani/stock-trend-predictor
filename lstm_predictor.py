@@ -1,64 +1,36 @@
-import yfinance as yf
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, LSTM
-import os
+# from flask import Flask, render_template, request
+# import yfinance as yf
+# import matplotlib.pyplot as plt
+# import pandas as pd
+# from statsmodels.tsa.holtwinters import ExponentialSmoothing
 
-def predict_stock(ticker):
-    # Step 1: Fetch data
-    df = yf.download(ticker, start="2025-01-01", end="2025-01-01")
-    df = df[['Close']].dropna()
+# def predict_stock(ticker):
+#     stock = yf.download(ticker, period="1y", interval="1d")
+#     stock.reset_index(inplace=True)
 
-    # Step 2: Preprocess
-    scaler = MinMaxScaler()
-    scaled_data = scaler.fit_transform(df)
+#     df = stock[['Date', 'Close']].rename(columns={"Date": "ds", "Close": "y"})
+#     df.set_index('ds', inplace=True)
 
-    sequence_length = 60
-    X, y = [], []
-    for i in range(sequence_length, len(scaled_data)):
-        X.append(scaled_data[i-sequence_length:i])
-        y.append(scaled_data[i])
+#     # Use Exponential Smoothing (Holt-Winters)
+#     model = ExponentialSmoothing(df['y'], trend='add', seasonal=None)
+#     fit = model.fit()
 
-    X, y = np.array(X), np.array(y)
+#     # Forecast next 30 days
+#     forecast = fit.forecast(30)
+#     forecast_index = pd.date_range(df.index[-1] + pd.Timedelta(days=1), periods=30, freq='D')
+#     forecast_df = pd.DataFrame({'ds': forecast_index, 'yhat': forecast.values})
 
-    # Step 3: Train/test split
-    split = int(0.8 * len(X))
-    X_train, X_test = X[:split], X[split:]
-    y_train, y_test = y[:split], y[split:]
+#     plt.figure(figsize=(8, 4))
+#     plt.plot(df.index, df['y'], label="Historical", color="blue")
+#     plt.plot(forecast_df['ds'], forecast_df['yhat'], label="Prediction", color="orange")
+#     plt.legend()
+#     plt.grid(True)
+#     plt.title(f"{ticker} - 30 Day Prediction")
+#     plt.savefig("static/prediction_chart.png")
+#     plt.close()
 
-    # Step 4: LSTM model
-    model = Sequential([
-        LSTM(50, return_sequences=True, input_shape=(X.shape[1], 1)),
-        LSTM(50),
-        Dense(1)
-    ])
-    model.compile(optimizer='adam', loss='mean_squared_error')
-    model.fit(X_train, y_train, epochs=10, batch_size=32, verbose=0)
-
-    # Step 5: Prediction
-    predicted = model.predict(X_test)
-    predicted = scaler.inverse_transform(predicted)
-    actual = scaler.inverse_transform(y_test)
-
-    # Step 6: Save plot
-    if not os.path.exists("static"):
-        os.makedirs("static")
-
-    plt.figure(figsize=(12, 6))
-    plt.plot(actual, label="Actual")
-    plt.plot(predicted, label="Predicted")
-    plt.title(f"{ticker} Stock Price Prediction")
-    plt.legend()
-    path = f"static/{ticker}_plot.png"
-    plt.savefig(path)
-    plt.close()
-
-    # Step 7: Decision Suggestion
-    last_real = actual[-1][0]
-    last_pred = predicted[-1][0]
-    suggestion = "Up ✅" if last_pred > last_real else "Down ❌"
-
-    return suggestion, path
+#     return {
+#         "current_price": df['y'].iloc[-1],
+#         "predicted_price": forecast.values[-1],
+#         "forecast": forecast_df
+#     }

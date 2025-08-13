@@ -4,12 +4,35 @@ from top_stocks import get_top_indian_stocks_nse
 from top_stocks import get_top_indian_stocks_bse
 from useful_tips import get_useful_tips
 from history_data import get_history_data
+# from lstm_predictor import predict_stock  # Assuming you have a predict function in predict.py
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def home():
-    return render_template("index.html")
+    prediction = None
+    chart = None
+    ticker = None
+
+    # Always fetch stock data here
+    top_stocks_nyse = get_top_stocks_nyse()
+    top_stocks_bse = get_top_indian_stocks_bse()
+    top_stocks_nse = get_top_indian_stocks_nse()
+
+    if request.method == "POST":
+        ticker = request.form.get("ticker")
+        prediction, chart = predict_stock(ticker)
+
+    return render_template(
+        "index.html",
+        prediction=prediction,
+        chart=chart,
+        ticker=ticker,
+        top_stocks_nyse=top_stocks_nyse,
+        top_stocks_bse=top_stocks_bse,
+        top_stocks_nse=top_stocks_nse
+    )
+
 
 @app.route('/history', methods=['GET', 'POST'])
 def history():
@@ -23,6 +46,18 @@ def history():
 def tips():
     tips = get_useful_tips()
     return render_template("tips.html", tips=tips)
+
+@app.route("/predict_stock", methods=["GET", "POST"])
+def predict_stock_route():
+    prediction = None
+    chart = None
+    ticker = None
+
+    if request.method == "POST":
+        ticker = request.form.get("ticker")
+        prediction, chart = predict_stock(ticker)
+
+    return render_template("predict_stock.html", prediction=prediction, chart=chart, ticker=ticker)
 
 @app.route("/top_stocks")
 def top_stocks():
