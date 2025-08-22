@@ -1,19 +1,126 @@
 {% extends "base.html" %}
 {% block title %}Stock Prediction{% endblock %}
 {% block content %}
+
 <h1 class="mb-4">📈 AI Stock Predictor</h1>
-<div class="row mt-4">
-    <div class="col-md-6">
-        <h3>📈 Stock Trend: {{ ticker }}</h3>
-        <img src="data:image/png;base64,{{ chart }}" class="img-fluid">
+<form method="post" class="mb-4">
+    <div class="form-group">
+        <label for="tickerInput">Enter Stock Ticker:</label>
+        <input type="text" class="form-control" id="tickerInput" name="ticker"
+               placeholder="e.g. AAPL" value="{{ request.form.ticker or '' }}" required>
     </div>
+    <button type="submit" class="btn btn-primary mt-2">Predict</button>
+</form>
+
+{% if error %}
+<div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+
+{% if prediction is not none %}
+<div class="row g-4">
+    
+    <!-- Prediction Widget -->
+    {% if last_price is not none and predicted_price is not none %}
+    {% if prediction %}
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Prediction</h5>
+                <span class="display-6 fw-bold text-{{ 'success' if prediction=='Up' else 'danger' if prediction=='Down' else 'secondary' }}">
+                    {{ prediction }}
+                </span>
+                <p class="text-muted mt-2">Last Price: ${{ last_price }} <br> Predicted: ${{ predicted_price }}</p>
+                {% if confidence_low is not none and confidence_high is not none %}
+                <p class="badge bg-info">Range: ${{ confidence_low }} - ${{ confidence_high }}</p>
+                {% endif %}
+
+                <!-- Buy / Sell Suggestion -->
+                <div class="mt-3">
+                    {% if prediction == "Up" %}
+                        <span class="badge bg-success">💹 Suggested: BUY</span>
+                    {% elif prediction == "Down" %}
+                        <span class="badge bg-danger">📉 Suggested: SELL</span>
+                    {% else %}
+                        <span class="badge bg-secondary">⚖️ Suggested: HOLD</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <!-- Volatility -->
+    {% if volatility %}
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Volatility 📊</h5>
+                <span class="badge bg-warning text-dark">{{ volatility }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Trend -->
+    {% if trend %}
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Trend 🔍</h5>
+                <span class="badge bg-primary">{{ trend }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row g-4 mt-2">
+    <!-- Support & Resistance -->
+    {% if support or resistance %}
     <div class="col-md-6">
-        <h4>📊 Key Insights</h4>
-        <ul>
-            <li><strong>Monthly Change:</strong> {{ pct_change }}%</li>
-            <li><strong>Trend:</strong> {{ trend }}</li>
-            <li>Prediction is based on moving average analysis and recent performance</li>
-        </ul>
+        <div class="card shadow-sm border-0">
+            <div class="card-body text-center">
+                <h5>Support & Resistance 📉📈</h5>
+                {% if support %}
+                <p>Support: <strong>${{ support }}</strong></p>
+                {% endif %}
+                {% if resistance %}
+                <p>Resistance: <strong>${{ resistance }}</strong></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- AI Explanation -->
+    {% if explanation %}
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <h5>AI Explanation 🤖</h5>
+                <p>{{ explanation }}</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Chart -->
+{% if chart_json %}
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+        <h5>Interactive Chart</h5>
+        <div id="chart"></div>
     </div>
 </div>
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script>
+    const chartData = {{ chart_json | safe }};
+    Plotly.newPlot('chart', chartData.data, chartData.layout);
+</script>
+{% endif %}
+
+{% endif %}
 {% endblock %}

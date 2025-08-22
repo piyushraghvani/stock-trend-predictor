@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Historical Data{% endblock %}
+
+{% block content %}
+<h1>AI Stock Predictor Bot - Discuss</h1>
+<p>Welcome to the AI Stock Predictor Bot discussion page! Here you can talk about stock predictions, trends, and
+    insights.</p>
+
+    <div class="chat-container"></div>
+        <div id="chat-history" class="chat-history" style="border:1px solid #ccc; padding:16px; height:300px; overflow-y:auto; background:#fafafa; margin-bottom:16px;">
+            <!-- Chat messages will appear here -->
+        </div>
+        <form id="chat-form" autocomplete="off" style="display:flex; gap:8px;">
+            <input type="text" id="user-input" class="form-control" placeholder="Ask the AI bot about stocks..." style="flex:1;" required>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+    <script>
+    document.getElementById('chat-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const input = document.getElementById('user-input');
+        const message = input.value.trim();
+        if (!message) return;
+        appendMessage('You', message);
+        input.value = '';
+        // Send user message to backend (replace '/ask-bot' with your endpoint)
+        const response = await fetch('/ask_bot', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({query: message})
+        });
+        const data = await response.json();
+        appendMessage('Bot', data.answer || 'Sorry, I could not process your request.');
+    });
+    function appendMessage(sender, text) {
+        const chat = document.getElementById('chat-history');
+        const msg = document.createElement('div');
+        msg.innerHTML = `<strong>${sender}:</strong> ${text}`;
+        chat.appendChild(msg);
+        chat.scrollTop = chat.scrollHeight;
+    }
+    </script>
+
+{% endblock %}
+
+
+

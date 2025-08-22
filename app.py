@@ -3,8 +3,9 @@ from top_stocks import get_top_stocks_nyse
 from top_stocks import get_top_indian_stocks_nse
 from top_stocks import get_top_indian_stocks_bse
 from history_data import get_history_data
-# from lstm_predictor import predict_stock  # Assuming you have a predict function in predict.py
+from lstm_predictor import predict_stock  # Assuming you have a predict function in predict.py
 from useful_tips import get_top_growth_picks, get_value_buys, get_hidden_gems
+#from ask_bot import ask_bot  # Assuming you have an AI bot function in ai_bot.py
 
 app = Flask(__name__)
 
@@ -34,13 +35,28 @@ def home():
     )
 
 
-@app.route('/history', methods=['GET', 'POST'])
+@app.route("/history", methods=["GET", "POST"])
 def history():
-    symbol = request.args.get("symbol", "AAPL")
+    symbol = request.args.get("symbol") or request.form.get("symbol")
     page = int(request.args.get("page", 1))
-    page_size = 20
-    history_data = get_history_data(symbol, page, page_size)
-    return render_template("history.html", symbol=symbol, history_data=history_data)
+
+    history_data = None
+    summary = None
+    chart_json = None
+
+    if symbol:
+        result = get_history_data(symbol, page=page, page_size=50)
+        history_data = result
+        summary = result.get("summary")
+        chart_json = result.get("chart_json")
+
+    return render_template(
+        "history.html",
+        symbol=symbol,
+        history_data=history_data,
+        summary=summary,
+        chart_json=chart_json
+    )
 
 @app.route("/tips")
 def tips():
@@ -49,15 +65,41 @@ def tips():
 
 @app.route("/predict_stock", methods=["GET", "POST"])
 def predict_stock_route():
-    prediction = None
-    chart = None
-    ticker = None
-
     if request.method == "POST":
         ticker = request.form.get("ticker")
-        prediction, chart = predict_stock(ticker)
+        result = predict_stock(ticker)
 
-    return render_template("predict_stock.html", prediction=prediction, chart=chart, ticker=ticker)
+        # Convert pandas/numpy objects to native Python types for template safety
+        def to_native(val):
+            import numpy as np
+            import pandas as pd
+            if isinstance(val, (np.generic, np.ndarray)):
+                return val.item() if val.size == 1 else val.tolist()
+            if isinstance(val, pd.Series):
+                return val.tolist()
+            return val
+
+        confidence_range = [to_native(result.get("confidence_low")), to_native(result.get("confidence_high"))]
+
+        return render_template(
+            "predict_stock.html",
+            ticker=ticker,
+            prediction=to_native(result.get("prediction")),
+            confidence=to_native(result.get("confidence")),
+            chart=None,  # No static chart, use interactive
+            last_price=to_native(result.get("last_price")),
+            predicted_price=to_native(result.get("predicted_price")),
+            volatility=to_native(result.get("volatility")),
+            trend=to_native(result.get("trend")),
+            support=to_native(result.get("support")),
+            resistance=to_native(result.get("resistance")),
+            explanation=to_native(result.get("explanation")),
+            confidence_range=confidence_range,
+            error=result.get("error"),
+            chart_json=result.get("chart_json")
+        )
+
+    return render_template("predict_stock.html")
 
 @app.route("/top_stocks")
 def top_stocks():
@@ -73,6 +115,17 @@ def dashboard():
     value_buys = get_value_buys()
     hidden_gems = get_hidden_gems()
     return render_template("dashboard.html", top_growth=top_growth, value_buys=value_buys, hidden_gems=hidden_gems)
+
+@app.route("/ai_bot")
+def aibot():
+    return render_template("ai_bot.html")
+
+@app.route("/ask_bot", methods=["POST"])
+def ask_bot_route():
+    user_query = request.json.get("query")
+    # answer = ask_bot(user_query)
+    # return {"answer": answer}
+    return render_template("ai_bot.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
