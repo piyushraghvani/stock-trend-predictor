@@ -5,6 +5,7 @@ from top_stocks import get_top_indian_stocks_bse
 from history_data import get_history_data
 # from lstm_predictor import predict_stock  # Assuming you have a predict function in predict.py
 from useful_tips import get_top_growth_picks, get_value_buys, get_hidden_gems
+from sentiment_analysis_blob import get_news_and_sentiment
 
 app = Flask(__name__)
 
@@ -73,6 +74,18 @@ def dashboard():
     value_buys = get_value_buys()
     hidden_gems = get_hidden_gems()
     return render_template("dashboard.html", top_growth=top_growth, value_buys=value_buys, hidden_gems=hidden_gems)
+
+@app.route("/sentiment_analysis", methods=["GET", "POST"])
+def sentiment_analysis():
+    stock_name = 'None'
+    overall_sentiment = None
+    news_list = []
+
+    if request.method == "POST":
+        stock_name = request.form.get("symbol")
+        overall_sentiment, news_list = get_news_and_sentiment(stock_name)
+
+    return render_template("sentiment_analysis.html", stock_name=stock_name, overall_sentiment=overall_sentiment, news_list=news_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
