@@ -6,6 +6,7 @@ from history_data import get_history_data
 from lstm_predictor import predict_stock  # Assuming you have a predict function in predict.py
 from useful_tips import get_top_growth_picks, get_value_buys, get_hidden_gems
 #from ask_bot import ask_bot  # Assuming you have an AI bot function in ai_bot.py
+from sentiment_analysis_blob import get_news_and_sentiment
 
 app = Flask(__name__)
 
@@ -126,6 +127,17 @@ def ask_bot_route():
     # answer = ask_bot(user_query)
     # return {"answer": answer}
     return render_template("ai_bot.html")
+@app.route("/sentiment_analysis", methods=["GET", "POST"])
+def sentiment_analysis():
+    stock_name = 'None'
+    overall_sentiment = None
+    news_list = []
+
+    if request.method == "POST":
+        stock_name = request.form.get("symbol")
+        overall_sentiment, news_list = get_news_and_sentiment(stock_name)
+
+    return render_template("sentiment_analysis.html", stock_name=stock_name, overall_sentiment=overall_sentiment, news_list=news_list)
 
 if __name__ == "__main__":
     app.run(debug=True)
